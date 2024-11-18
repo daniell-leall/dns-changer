@@ -4,7 +4,6 @@ setlocal enabledelayedexpansion
 :: Check if the script is being run as administrator
 net session >nul 2>&1
 if %errorlevel% neq 0 (
-    echo.
     echo ===================================================
     echo            WELCOME TO THE DNS CHANGER T00L
     echo ===================================================
@@ -18,30 +17,39 @@ if %errorlevel% neq 0 (
 )
 
 :: Ask the user which network interface they want to use
+:AskInterface
 cls
-echo ===========================================
+echo ===================================================
+echo            WELCOME TO THE DNS CHANGER T00L
+echo ===================================================
+echo.
 echo   Select the network interface to use:
-echo ===========================================
 echo.
 echo   [1] Ethernet
 echo   [2] Wi-Fi
 echo.
+echo ===================================================
+echo.
 
 set /p interface_choice="Enter your choice: "
 
-:: Set the network interface based on the user's choice
+:: Validate the network interface choice
 if "%interface_choice%"=="1" (
     set INTERFACE_NAME="Ethernet"
-) else (
+) else if "%interface_choice%"=="2" (
     set INTERFACE_NAME="Wi-Fi"
+) else (
+    echo Invalid choice. Please select either 1 or 2.
+    pause
+    goto AskInterface
 )
 
 :: Function to check the current DNS configuration
 :CheckDNS
 cls
-echo ==========================================
-echo   WELCOME TO THE DNS CHANGER T00L
-echo ==========================================
+echo ===================================================
+echo            WELCOME TO THE DNS CHANGER T00L
+echo ===================================================
 echo.
 echo   Checking current DNS configuration...
 echo.
@@ -66,14 +74,15 @@ if defined dnsList (
 :: Show the menu options
 echo.
 echo   Select an option below:
+echo.
 echo   [1] Set DNS to Dynamic (DHCP)
 echo   [2] Set Static Google DNS (8.8.8.8, 8.8.4.4)
 echo   [3] Set Static Cloudflare DNS (1.1.1.1)
-echo   [4] Set Static Local Pi-hole DNS (192.168.0.100)
-echo   [5] Exit
+echo   [4] Set Static AdGuard DNS (94.140.14.140, 94.140.15.15)
+echo   [5] Set Static Local Pi-hole DNS (192.168.0.100)
+echo   [6] Exit
 echo.
-echo   Follow me on Instagram: @daniell.leall
-echo ==========================================
+echo ===================================================
 echo.
 
 set /p choice="Enter your choice: "
@@ -82,8 +91,9 @@ set /p choice="Enter your choice: "
 if "%choice%"=="1" goto SetDynamicDNS
 if "%choice%"=="2" goto SetGoogleDNS
 if "%choice%"=="3" goto SetCloudflareDNS
-if "%choice%"=="4" goto SetPiholeDNS
-if "%choice%"=="5" goto ExitScript
+if "%choice%"=="4" goto SetAdGuardDNS
+if "%choice%"=="5" goto SetPiholeDNS
+if "%choice%"=="6" goto ExitScript
 
 :: Handle invalid choice
 echo Invalid choice. Please try again.
@@ -106,12 +116,36 @@ echo Setting DNS to Cloudflare (1.1.1.1)...
 netsh interface ip set dns name=%INTERFACE_NAME% static 1.1.1.1
 goto CheckDNS
 
+:SetAdGuardDNS
+echo Setting DNS to AdGuard (94.140.14.140, 94.140.15.15)...
+netsh interface ip set dns name=%INTERFACE_NAME% static 94.140.14.140
+netsh interface ip add dns name=%INTERFACE_NAME% 94.140.15.15 index=2
+goto CheckDNS
+
 :SetPiholeDNS
 echo Setting DNS to Local Pi-hole (192.168.0.100)...
 netsh interface ip set dns name=%INTERFACE_NAME% static 192.168.0.100
 goto CheckDNS
 
 :ExitScript
-echo Exiting script. Goodbye!
+
+:: Temporarily disable delayed expansion to display the exclamation mark
+setlocal disableDelayedExpansion
+
+cls
+echo ============================================================
+echo             THANK YOU FOR USING THE SCRIPT!
+echo ============================================================
+echo.
+echo   Don't forget to:
+echo.
+echo   Follow me on Instagram:  @daniell.leall
+echo   Subscribe to my channel on YouTube:  @daniell_leall
+echo.
+echo   Exiting script... Goodbye!
+echo.
+echo ============================================================
+
+endlocal
 pause
 exit
