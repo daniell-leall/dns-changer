@@ -67,7 +67,7 @@ if defined dnsList (
 
 :: Display the configured DNS
 if defined dnsList (
-    echo   Current DNS is set to: 
+    echo   Current DNS is set to: -
     echo   Current primary DNS: [!dnsList!]
 )
 
@@ -79,8 +79,14 @@ echo   [1] Set DNS to Dynamic (DHCP)
 echo   [2] Set Static Google DNS (8.8.8.8, 8.8.4.4)
 echo   [3] Set Static Cloudflare DNS (1.1.1.1)
 echo   [4] Set Static AdGuard DNS (94.140.14.140, 94.140.15.15)
-echo   [5] Set Static Local Pi-hole DNS (192.168.0.100)
-echo   [6] Exit
+
+echo   [5] Set Static OpenDNS Cisco (208.67.222.222, 208.67.220.22)
+echo   [6] Set Static Quad9 DNS (9.9.9.9, 149.112.112.112)
+echo   [7] Set Static CleanBrowsing DNS (185.228.168.168, 185.228.169.168)
+echo   [8] Set Static Comodo Secure DNS (8.26.56.26, 8.20.247.20)
+
+echo   [9] Set Static Local Pi-hole DNS (192.168.0.100)
+echo   [10] Exit
 echo.
 echo ===================================================
 echo.
@@ -92,8 +98,14 @@ if "%choice%"=="1" goto SetDynamicDNS
 if "%choice%"=="2" goto SetGoogleDNS
 if "%choice%"=="3" goto SetCloudflareDNS
 if "%choice%"=="4" goto SetAdGuardDNS
-if "%choice%"=="5" goto SetPiholeDNS
-if "%choice%"=="6" goto ExitScript
+
+if "%choice%"=="5" goto OpenDNSCisco
+if "%choice%"=="6" goto Quad9
+if "%choice%"=="7" goto CleanBrowsing
+if "%choice%"=="8" goto ComodoSecureDNS
+
+if "%choice%"=="9" goto SetPiholeDNS
+if "%choice%"=="10" goto ExitScript
 
 :: Handle invalid choice
 echo Invalid choice. Please try again.
@@ -121,6 +133,36 @@ echo Setting DNS to AdGuard (94.140.14.140, 94.140.15.15)...
 netsh interface ip set dns name=%INTERFACE_NAME% static 94.140.14.140
 netsh interface ip add dns name=%INTERFACE_NAME% 94.140.15.15 index=2
 goto CheckDNS
+
+
+
+
+:OpenDNSCisco
+echo Setting DNS to OpenDNS Cisco (208.67.222.222, 8.8.4.4)...
+netsh interface ip set dns name=%INTERFACE_NAME% static 208.67.222.222
+netsh interface ip add dns name=%INTERFACE_NAME% 208.67.220.220 index=2
+goto CheckDNS
+
+:Quad9
+echo Setting DNS to Quad9 (9.9.9.9, 149.112.112.112)...
+netsh interface ip set dns name=%INTERFACE_NAME% static 9.9.9.9
+netsh interface ip add dns name=%INTERFACE_NAME% 149.112.112.112 index=2
+goto CheckDNS
+
+:CleanBrowsing
+echo Setting DNS to CleanBrowsing (185.228.168.168, 185.228.169.168)...
+netsh interface ip set dns name=%INTERFACE_NAME% static 185.228.168.168
+netsh interface ip add dns name=%INTERFACE_NAME% 185.228.169.168 index=2
+goto CheckDNS
+
+:ComodoSecureDNS
+echo Setting DNS to Comodo Secure (8.26.56.26, 8.20.247.20)...
+netsh interface ip set dns name=%INTERFACE_NAME% static 8.26.56.26
+netsh interface ip add dns name=%INTERFACE_NAME% 8.20.247.20 index=2
+goto CheckDNS
+
+
+
 
 :SetPiholeDNS
 echo Setting DNS to Local Pi-hole (192.168.0.100)...
