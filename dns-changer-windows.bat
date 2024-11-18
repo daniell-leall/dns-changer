@@ -15,7 +15,12 @@ set INTERFACE_NAME="Wi-Fi"
 :: Function to check the current DNS configuration
 :CheckDNS
 cls
-echo Checking current DNS configuration...
+echo ==========================================
+echo   WELCOME TO THE DNS CHANGER T00L
+echo ==========================================
+echo.
+echo   Checking current DNS configuration...
+echo.
 
 :: Use PowerShell to get the configured DNS addresses
 set dnsList=
@@ -30,27 +35,31 @@ if defined dnsList (
 
 :: Display the configured DNS
 if defined dnsList (
-    echo Current DNS is set to: 
-    echo Current primary DNS: [!dnsList!]
+    echo   Current DNS is set to: 
+    echo   Current primary DNS: [!dnsList!]
 )
 
-:: Display menu
+:: Show the menu options
 echo.
-echo Select an option:
-echo 1. Set DNS to Dynamic (DHCP)
-echo 2. Set Static Google DNS (8.8.8.8, 8.8.4.4)
-echo 3. Set Static Cloudflare DNS (1.1.1.1)
-echo 4. Set Static Local Pi-hole DNS (192.168.0.100)
-echo 5. Exit
+echo   Select an option below:
+echo   [1] Set DNS to Dynamic (DHCP)
+echo   [2] Set Static Google DNS (8.8.8.8, 8.8.4.4)
+echo   [3] Set Static Cloudflare DNS (1.1.1.1)
+echo   [4] Set Static Local Pi-hole DNS (192.168.0.100)
+echo   [5] Exit
 echo.
+echo   Follow me on Instagram: @daniell.leall
+echo ==========================================
+echo.
+
 set /p choice="Enter your choice: "
 
 :: Process the user's choice
-if "!choice!" equ "1" goto SetDynamicDNS
-if "!choice!" equ "2" goto SetGoogleDNS
-if "!choice!" equ "3" goto SetCloudflareDNS
-if "!choice!" equ "4" goto SetPiholeDNS
-if "!choice!" equ "5" goto ExitScript
+if "%choice%"=="1" goto SetDynamicDNS
+if "%choice%"=="2" goto SetGoogleDNS
+if "%choice%"=="3" goto SetCloudflareDNS
+if "%choice%"=="4" goto SetPiholeDNS
+if "%choice%"=="5" goto ExitScript
 
 :: Handle invalid choice
 echo Invalid choice. Please try again.
