@@ -4,13 +4,37 @@ setlocal enabledelayedexpansion
 :: Check if the script is being run as administrator
 net session >nul 2>&1
 if %errorlevel% neq 0 (
-    echo [ERROR] This script must be run as Administrator. Please restart with elevated privileges.
+    echo.
+    echo ===================================================
+    echo            WELCOME TO THE DNS CHANGER T00L
+    echo ===================================================
+    echo.
+    echo [ERROR] WHOOPS! Looks like you don't have admin rights.
+    echo.
+    echo Please restart this script as Administrator to unleash its power!
+    echo.
     pause
     exit /b
 )
 
-:: Define the name of the network interface
-set INTERFACE_NAME="Wi-Fi"
+:: Ask the user which network interface they want to use
+cls
+echo ===========================================
+echo   Select the network interface to use:
+echo ===========================================
+echo.
+echo   [1] Ethernet
+echo   [2] Wi-Fi
+echo.
+
+set /p interface_choice="Enter your choice: "
+
+:: Set the network interface based on the user's choice
+if "%interface_choice%"=="1" (
+    set INTERFACE_NAME="Ethernet"
+) else (
+    set INTERFACE_NAME="Wi-Fi"
+)
 
 :: Function to check the current DNS configuration
 :CheckDNS
