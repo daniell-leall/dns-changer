@@ -226,31 +226,68 @@ if /i "%add_secondary_dns%"=="Y" (
 
 goto CheckDNS
 
-
 :SetPiholeDNS
 echo Setting DNS to Local Pi-hole (192.168.0.100)...
 netsh interface ip set dns name=%INTERFACE_NAME% static 192.168.0.100
 goto CheckDNS
 
 :ExitScript
-
-:: Temporarily disable delayed expansion to display the exclamation mark
+:: Disables variable expansion to correctly display the exclamation mark
 setlocal disableDelayedExpansion
 
+:: Setting the wait time in seconds (can be easily changed)
+set WAIT_TIME=20
+
+:: Clearing the screen and displaying the menu
 cls
 echo ============================================================
-echo             THANK YOU FOR USING THE SCRIPT!
+echo              THANK YOU FOR USING THIS SCRIPT!
 echo ============================================================
 echo.
-echo   Don't forget to:
+echo   We will close automatically in %WAIT_TIME% seconds.
 echo.
-echo   Follow me on Instagram:  @daniell.leall
-echo   Subscribe to my channel on YouTube:  @daniell_leall
 echo.
-echo   Exiting script... Goodbye!
+echo   Don't forget to follow me on:
+echo.
+echo   [1] Instagram
+echo   [2] YouTube
+echo   [3] GitHub
+echo.
+echo   [4] Buy Me a Coffee
+echo.
 echo.
 echo ============================================================
+echo.
 
-endlocal
-pause
-exit
+:: Using the "choice" command to get user input with a 20-second timeout
+choice /c 12345 /t %WAIT_TIME% /d 5 /n /m "Choose an option:"
+
+:: Action to be executed based on the selected option
+if %errorlevel%==5 (
+    echo.
+    echo   Exiting script... Goodbye!
+    timeout /t 2 >nul
+    exit
+) else if %errorlevel%==1 (
+    echo.
+    echo Opening Instagram profile...
+    timeout /t 2 >nul
+    start https://www.instagram.com/daniell.leall/
+) else if %errorlevel%==2 (
+    echo.
+    echo Opening YouTube profile...
+    timeout /t 2 >nul
+    start https://www.youtube.com/@prosecd?sub_confirmation=1
+) else if %errorlevel%==3 (
+    echo.
+    echo Opening GitHub profile...
+    timeout /t 2 >nul
+    start https://github.com/daniell-leall
+) else if %errorlevel%==4 (
+    echo.
+    echo Opening Buy Me a Coffee page...
+    timeout /t 2 >nul
+    start https://ko-fi.com/daniell_leall
+)
+
+goto ExitScript
